@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, time 
 
 def detect_brute_force(parsed_log, output_file="result.json", threshold=5):
     """
@@ -44,13 +45,14 @@ def detect_brute_force(parsed_log, output_file="result.json", threshold=5):
         
     return output_file
 
-black_list = []
-ip_address = []
-def detect_blacklist(blacklist_file, log_file):
+
+def detect_blacklist(blacklist_file, log_file, output_file="result.json"):
     """
     Detects if any IP address in the log file is blacklisted.
     """
     # Placeholder for blacklist detection logic
+    black_list = []
+    ip_address = []
     with open(blacklist_file, 'r') as f:
         for line in f:
           black_list.append(line.strip())
@@ -62,25 +64,54 @@ def detect_blacklist(blacklist_file, log_file):
             print(f"Blacklisted IP detected: {entry.get('src-ip')}")
             ip_address.append(entry.get("src-ip"))
             print(ip_address)
-    with open("result.json", 'a')as f:
+    with open(output_file, 'a')as f:
         json.dump({"blacklisted_ips": ip_address}, f, indent=4)
 
+regular_hours = {    
+    "start": time(hour=9, minute=0),  # 9:00 AM
+    "end": time(hour=17, minute=0)   # 5:00 PM
+}
 
-        
-
-
-
-
-
-
-
-
-def detect_of_hours_login():
+def detect_of_hours_login(parsed_log, output_file="result.json"):
     """
     Detects logins that occur outside of normal working hours.
     """
     # Placeholder for out-of-hours login detection logic
-    pass
+    out_of_hour = []
+    ip_list = []
+    for entry in parsed_log:
+        is_login_ssh = entry.get("process") == "sshd" and "Accepted password for" in entry.get("message", "")
+        is_login_windows = entry.get("EventID") == 4624
+
+        curent_ip = entry.get("src-ip")
+
+        if curent_ip in ip_list:
+            continue
+        if is_login_ssh or is_login_windows:
+            timestamp = entry.get("timestamp") or entry.get("EventTime")
+            date_time_obj = datetime.strptime(timestamp, "%b %d %H:%M:%S")
+            if date_time_obj.time() < regular_hours["start"] or date_time_obj.time() > regular_hours["end"]:
+                ip_list.append(curent_ip)
+                print(f"Out-of-hours login detected at {timestamp} from IP: {entry.get('src-ip')}")
+                alert = {
+                    "timpestamp" : entry.get("timestamp") or entry.get("EventTime"),
+                    "src-ip" : entry.get("src-ip") or entry.get("hostname"),
+                    "message" : "out-of-hour login detected"
+                }
+                print(alert)
+                out_of_hour.append(alert)
+
+    if out_of_hour:
+        with open(output_file, 'a') as f:
+            json.dump(out_of_hour, f, indent=4)
+    else:
+        print("there is no logon out of the usual hours")
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -110,4 +141,4 @@ if __name__ == "__main__":
 }
 
     ]
-    detect_brute_force(example_log, "brute_force_result.json",1)  
+#detect_of_hours_login(example_log)  
