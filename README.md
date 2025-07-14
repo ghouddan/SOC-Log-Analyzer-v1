@@ -27,8 +27,20 @@ This tool supports both Unix/Linux auth.log files and structured Windows-style J
 ## How to Use
 
 ```
-python analyzer.py --log_file ./samples/auth.log --file_type auth --output report.json --threshold 5 --timestamp --ip_list blacklist.txt
+python analyzer.py --log ./samples/auth.log --type auth --output report.json --threshold 5 --timestamp --ip_list blacklist.txt
 ```
+
+### Arguments
+
+| Flag          | Description                                 |
+| ------------- | ------------------------------------------- |
+| `--log`       | Path to the log file                        |
+| `--type`      | `auth` for Unix, `json` for Windows logs    |
+| `--output`    | File to write the detection report          |
+| `--threshold` | Failed attempt count to trigger brute alert |
+| `--timestamp` | Enable off-hours detection                  |
+| `--ip_list`   | Path to blacklist file (one IP per line)    |
+
 
 Output Format
 
