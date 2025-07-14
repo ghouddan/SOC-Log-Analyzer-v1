@@ -68,10 +68,10 @@ Output Format
 
 Exported JSON from Windows Event Viewer (4624/4625)
 
-Motivation
+## Motivation
 
 This project was built to simulate the kind of log analysis performed in real SOC environments and to gain hands-on practice with log parsing and threat detection. It’s part of my learning journey in cybersecurity.
 
 
-📫 LinkedIn | 🛡️ Cybersecurity Enthusiast | 💻 Software Engineer
+🛡️ Cybersecurity Enthusiast | 💻 Software Engineer
 
