@@ -29,45 +29,18 @@ This tool supports both Unix/Linux auth.log files and structured Windows-style J
 ```
 python analyzer.py --log_file ./samples/auth.log --file_type auth --output report.json --threshold 5 --timestamp --ip_list blacklist.txt
 ```
-Arguments
-
-Flag
-
-Description
-
---log
-
-Path to the log file
-
---type
-
-auth for Unix, json for Windows logs
-
---output
-
-File to write the detection report
-
---threshold
-
-Failed attempt count to trigger brute alert
-
---timestamp
-
-Enable off-hours detection
-
---ip_list
-
-Path to blacklist file (one IP per line)
 
 Output Format
 
 ## Output is saved as JSON with structure:
 
+```
 {
   "brute_force": [ ... ],
   "blacklist": [ ... ],
   "off_hours": [ ... ]
 }
+```
 
 ## Sample Use Cases
 
@@ -83,7 +56,7 @@ Output Format
 
 Exported JSON from Windows Event Viewer (4624/4625)
 
-📌 Motivation
+Motivation
 
 This project was built to simulate the kind of log analysis performed in real SOC environments and to gain hands-on practice with log parsing and threat detection. It’s part of my learning journey in cybersecurity.
 
